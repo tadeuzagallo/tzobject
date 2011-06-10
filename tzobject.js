@@ -1,11 +1,10 @@
-this.TZObject = (function(){
-
-var callbacks = {};
-var attributes = {};
-
+this.TZObject = function(){
+	var callbacks = {};
+	var attributes = {};
+	
 function TZObject(){
 	var _this = this;
-		
+	
 	var __init__ = function __init__(){
 		if(!_this.el || !(window.$ || window.jQuery)){
 			return false;
@@ -402,7 +401,7 @@ TZObject.prototype.append = function append(){
 };
 
 return TZObject;
-})();
+};
 
 var extend = function extend(data){
 	var child = TZ.inherits(this, data);
@@ -424,21 +423,26 @@ this.TZ = {
 			to[x] = from[x];
 		}
 	}
-	,"wrap": function(obj, func){
+	,"wrap": function(obj, fn){
 		return function(){
-			func.apply(obj, arguments);
+			fn.apply(obj, arguments);
 		}
 	}
 	,"bind": function(obj){
-		funcs = Array.prototype.slice.call(arguments, 1);
-		TZ.each(funcs, function(f){obj[f] = TZ.wrap(obj, obj[f]);});
-		return this;
+		fns = Array.prototype.slice.call(arguments, 1);
+		
+		TZ.each(fns, function(f){
+			obj[f] = TZ.wrap(obj, obj[f]);
+		});
+		
+		return obj;
 	}
 	,"inherits": function(parent, data){
 		var child;
+		parent = parent();
 	
 		if(data && data.hasOwnProperty("constructor")){
-			child = objData.constructor;
+			child = data.constructor;
 		}else{
 			child = function(){ return parent.apply(this, arguments); };
 		}
